@@ -29,9 +29,6 @@ def show_graph(graph):
     nx.draw(netx, pos, with_labels=True, font_size=9, node_color=[[.8, .8, .8]])
 
 
-gcn_msg = df.copy_u('h', 'm')
-gcn_reduce = df.sum('m', 'h')
-
 
 class GCNLayer(nn.Module):
     def __init__(self, in_feats, out_feats):
@@ -39,6 +36,8 @@ class GCNLayer(nn.Module):
         #self.linear = nn.Linear(in_feats, out_feats)
 
     def forward(self, graph, features):
+        gcn_msg = df.copy_u('h', 'm')
+        gcn_reduce = df.sum('m', 'h')
         with graph.local_scope():
             graph.ndata['h'] = features
             graph.update_all(gcn_msg, gcn_reduce)
